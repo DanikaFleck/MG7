@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -22,7 +24,7 @@ public class Player : MonoBehaviour
     private void Start ()
     {
         _cameraTrans = Camera.main.transform;
-        Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
     }
 
     // ------------------------------------------------------------------------
@@ -52,7 +54,7 @@ public class Player : MonoBehaviour
         // Fix this line so that the Player GameObject is the PARENT of the seed.
         // That way, the seed will move with the player.
 
-        GameObject seed = Instantiate(_seedPrefab);
+        GameObject seed = Instantiate(_seedPrefab, gameObject.transform);
 
         // STEP 4 -------------------------------------------------------------
 
@@ -66,6 +68,10 @@ public class Player : MonoBehaviour
         // You might want to use _spawnUp and _spawnLeft to put the seed to the
         //      left and slightly above the player.
         // You will probably also need Transform.TransformDirection() ;)
+        
+        
+        seed.transform.position = transform.position + transform.TransformDirection(-_spawnLeft, _spawnUp, 0.0f);
+
 
         
         // STEP 5 -------------------------------------------------------------
@@ -90,6 +96,10 @@ public class Player : MonoBehaviour
 
         // STEP 7 -------------------------------------------------------------
         // Set the animation parameters to play the throwing animation.
+        if (Input.GetKey(KeyCode.Space))
+        {
+            _animator.SetTrigger("throw");
+        }
         
 
 
@@ -120,6 +130,14 @@ public class Player : MonoBehaviour
         // Set the animation parameters to play the walking animation.
         // You might need the mouseY, mouseX, vertical, and horizontal variables
         //      that are above this step :)
+
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A) || mouseY != 0 || mouseX != 0)
+        {
+            _animator.SetBool("walking", true);
+        } else
+        {
+            _animator.SetBool("walking", false);
+        }
 
 
         // STEP 8 -------------------------------------------------------------
